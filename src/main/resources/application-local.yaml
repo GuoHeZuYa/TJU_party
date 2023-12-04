@@ -1,0 +1,19 @@
+server:
+  port: 1234
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: '@LGt8WQj#moi%ItF'
+    url: jdbc:mysql://101.42.97.58:3306/twt_party
+    username: twt_party
+logging:
+  config: classpath:log/logback-spring-local.xml
+
+constant:
+  domain: weipeiyang.twt.edu.cn
+
+
+springdoc:
+  packagesToScan: edu.twt.party.controller
+
+

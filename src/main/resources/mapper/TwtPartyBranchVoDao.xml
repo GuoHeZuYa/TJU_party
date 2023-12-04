@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.twt.party.dao.TwtPartybranchMapper">
+
+    <resultMap id="BaseResultMap" type="edu.twt.party.pojo.partyBranch.TwtPartyBranchVo">
+        <id column="partybranch_id" jdbcType="INTEGER" property="partybranchId" />
+        <result column="partybranch_name" jdbcType="CHAR" property="partybranchName" />
+        <result column="partybranch_academy" jdbcType="INTEGER" property="partybranchAcademy" />
+        <result column="partybranch_type" jdbcType="INTEGER" property="partybranchType" />
+        <result column="partybranch_schoolyear" jdbcType="VARCHAR" property="partybranchSchoolyear" />
+        <result column="partybranch_establishtime" jdbcType="TIMESTAMP" property="partybranchEstablishtime" />
+        <result column="partybranch_isdeleted" jdbcType="TINYINT" property="partybranchIsdeleted" />
+        <result column="partybranch_total_score" jdbcType="INTEGER" property="partybranchTotalScore" />
+        <result column="partybranch_total_reply" jdbcType="INTEGER" property="partybranchTotalReply" />
+        <result column="partybranch_total_topic" jdbcType="INTEGER" property="partybranchTotalTopic" />
+        <result column="partybranch_total_act" jdbcType="INTEGER" property="partybranchTotalAct" />
+        <result column="regular_count" jdbcType="INTEGER" property="regularCount" />
+        <result column="prepare_count" jdbcType="INTEGER" property="prepareCount" />
+        <result column="develop_count" jdbcType="INTEGER" property="developCount" />
+        <result column="total_count" jdbcType="INTEGER" property="totalCount" />
+        <result column="great_active_count" jdbcType="INTEGER" property="greatActiveCount" />
+        <result column="active_count" jdbcType="INTEGER" property="activeCount" />
+        <result column="applicant_count" jdbcType="INTEGER" property="applicantCount" />
+        <result column="great_count" jdbcType="INTEGER" property="greatCount" />
+        <association property="partybranchSecretary" javaType="edu.twt.party.pojo.student.UserInfoBasic">
+            <result property="sno" column="partybranchSecretarySno" />
+            <result property="uid" column="partybranchSecretaryUid"/>
+            <result property="username" column="partybranchSecretaryName"/>
+        </association>
+        <association property="partybranchPropagator" javaType="edu.twt.party.pojo.student.UserInfoBasic">
+            <result property="sno" column="partybranchPropagatorSno" />
+            <result property="uid" column="partybranchPropagatorUid"/>
+            <result property="username" column="partybranchPropagatorName"/>
+        </association>
+        <association property="partybranchOrganizer" javaType="edu.twt.party.pojo.student.UserInfoBasic">
+            <result property="sno" column="partybranchOrganizerSno" />
+            <result property="uid" column="partybranchOrganizerUid"/>
+            <result property="username" column="partybranchOrganizerName"/>
+        </association>
+    </resultMap>
+
+
+
+
+
+    <update id="batchUpdateUserBranch">
+        update twt_student_info
+        set partybranch_id = #{targetBranchId}
+        where sno in
+        <!-- 为啥这写list识别不到-->
+        <foreach collection="snoList" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>;
+    </update>
+    <update id="kickOut"></update>
+
+
+    <select id="selectVoById" resultType="edu.twt.party.pojo.partyBranch.TwtPartyBranchVo">
+        select
+            branch.*,
+            info.username as organizerName,
+            info2.username as propagatorName,
+            info3.username as secretaryName,
+            college.collegename as collegeName
+        from twt_partybranch as branch
+                 left join b_userinfo as info on branch.partybranch_organizer = info.usernumb
+                 left join b_userinfo as info2 on branch.partybranch_propagator = info2.usernumb
+                 left join b_userinfo as info3 on branch.partybranch_secretary = info3.usernumb
+                 left join b_college as college on branch.partybranch_academy = college.id
+        where branch.partybranch_id = #{branchId}
+    </select>
+
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into .(, , , , , , , , , , , , , , , , , , , , , , , , , , , , )
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.collegeName}, #{entity.branchTypeName}, #{entity.secretaryName}, #{entity.organizerName},
+            #{entity.propagatorName}, #{entity.partybranchId}, #{entity.partybranchName},
+            #{entity.partybranchSecretary}, #{entity.partybranchOrganizer}, #{entity.partybranchPropagator},
+            #{entity.partybranchAcademy}, #{entity.partybranchType}, #{entity.partybranchSchoolyear},
+            #{entity.partybranchEstablishtime}, #{entity.partybranchIshidden}, #{entity.partybranchIsdeleted},
+            #{entity.partybranchTotalScore}, #{entity.partybranchTotalReply}, #{entity.partybranchTotalTopic},
+            #{entity.partybranchTotalAct}, #{entity.regularCount}, #{entity.prepareCount}, #{entity.developCount},
+            #{entity.totalCount}, #{entity.greatActiveCount}, #{entity.activeCount}, #{entity.applicantCount},
+            #{entity.greatCount}, #{entity.entityClass})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into .(, , , , , , , , , , , , , , , , , , , , , , , , , , , , )
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.collegeName}, #{entity.branchTypeName}, #{entity.secretaryName}, #{entity.organizerName},
+            #{entity.propagatorName}, #{entity.partybranchId}, #{entity.partybranchName},
+            #{entity.partybranchSecretary}, #{entity.partybranchOrganizer}, #{entity.partybranchPropagator},
+            #{entity.partybranchAcademy}, #{entity.partybranchType}, #{entity.partybranchSchoolyear},
+            #{entity.partybranchEstablishtime}, #{entity.partybranchIshidden}, #{entity.partybranchIsdeleted},
+            #{entity.partybranchTotalScore}, #{entity.partybranchTotalReply}, #{entity.partybranchTotalTopic},
+            #{entity.partybranchTotalAct}, #{entity.regularCount}, #{entity.prepareCount}, #{entity.developCount},
+            #{entity.totalCount}, #{entity.greatActiveCount}, #{entity.activeCount}, #{entity.applicantCount},
+            #{entity.greatCount}, #{entity.entityClass})
+        </foreach>
+        on duplicate key update
+        = values() , = values() , = values() , = values() , = values() , = values() , = values() , = values() , =
+        values() , = values() , = values() , = values() , = values() , = values() , = values() , = values() , = values()
+        , = values() , = values() , = values() , = values() , = values() , = values() , = values() , = values() , =
+        values() , = values() , = values() , = values()
+    </insert>
+
+    <select id="selectBranchList" resultMap="BaseResultMap">
+
+        SELECT branch.partybranch_id,
+        partybranch_name,
+        partybranch_academy,
+        partybranch_type,
+        partybranch_schoolyear,
+        partybranch_establishtime,
+        partybranch_isdeleted,
+        partybranch_total_score,
+        partybranch_total_reply,
+        partybranch_total_topic,
+        partybranch_total_act,
+        regular_count,
+        prepare_count,
+        develop_count,
+        total_count,
+        great_active_count,
+        active_count,
+        applicant_count,
+        great_count,
+        twt_info1.id AS  partybranchSecretaryUid,
+        twt_info2.id AS  partybranchPropagatorUid,
+        twt_info3.id AS partybranchOrganizerUid,
+        info.usernumb      AS partybranchSecretarySno,
+        info3.usernumb       AS partybranchOrganizerSno,
+        info2.usernumb       AS partybranchPropagatorSno,
+        info.username       AS partybranchOrganizerName,
+        info2.username      AS partybranchPropagatorName,
+        info3.username      AS partybranchSecretaryName,
+        college.collegename AS collegeName
+        FROM twt_partybranch AS branch
+        LEFT JOIN twt_student_info AS twt_info1 ON twt_info1.id = branch.partybranch_organizer
+        LEFT JOIN b_userinfo AS info ON info.usernumb = twt_info1.sno
+        LEFT JOIN twt_student_info AS twt_info2 ON twt_info2.id = branch.partybranch_propagator
+        LEFT JOIN b_userinfo AS info2 ON info2.usernumb = twt_info2.sno
+        LEFT JOIN twt_student_info AS twt_info3 ON twt_info3.id = branch.partybranch_secretary
+        LEFT JOIN b_userinfo AS info3 ON info3.usernumb = twt_info3.sno
+        LEFT JOIN b_college AS college ON branch.partybranch_academy = college.id
+        where partybranch_academy  = IFNULL(#{partybranch_academy},partybranch_academy )
+        and
+        partybranch_schoolyear  = IFNULL(#{partybranch_schoolyear},partybranch_schoolyear)
+        and
+        partybranch_type = IFNULL(#{partybranch_type},partybranch_type)
+        and
+        partybranch_isdeleted = 0
+    </select>
+
+    <!--    <update id="updatePartybranchSecretaryInt">-->
+<!--        UPDATE twt_partybranch SET partybranch_secretary = #{uid}-->
+<!--        WHERE twt_partybranch.partybranch_id = #{targetBranchId}-->
+<!--    </update>-->
+</mapper>
+

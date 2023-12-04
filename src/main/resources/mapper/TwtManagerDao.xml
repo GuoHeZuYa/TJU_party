@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.twt.party.dao.TwtManagerDao">
+
+    <resultMap type="edu.twt.party.pojo.manager.TwtManager" id="TwtManagerMap">
+        <result property="managerId" column="manager_id" jdbcType="INTEGER"/>
+        <result property="managerName" column="manager_name" jdbcType="VARCHAR"/>
+        <result property="managerAcademy" column="manager_academy" jdbcType="INTEGER"/>
+        <result property="managerType" column="manager_type" jdbcType="VARCHAR"/>
+        <result property="managerStatus" column="manager_status" jdbcType="VARCHAR"/>
+        <result property="managerColumngrant" column="manager_columngrant" jdbcType="VARCHAR"/>
+        <result property="imgId" column="img_id" jdbcType="INTEGER"/>
+        <result property="lastLogintime" column="last_logintime" jdbcType="TIMESTAMP"/>
+        <result property="managerIsdeleted" column="manager_isdeleted" jdbcType="INTEGER"/>
+        <result property="oldName" column="old_name" jdbcType="VARCHAR"/>
+        <result property="newName" column="new_name" jdbcType="VARCHAR"/>
+        <result property="managerSno" column="manager_sno" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="managerId" useGeneratedKeys="true">
+        insert into twt_party.twt_manager(manager_name, manager_academy, manager_type, manager_status, manager_columngrant, img_id, last_logintime, manager_isdeleted, old_name, new_name, manager_sno)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.managerName}, #{entity.managerAcademy}, #{entity.managerType}, #{entity.managerStatus}, #{entity.managerColumngrant}, #{entity.imgId}, #{entity.lastLogintime}, #{entity.managerIsdeleted}, #{entity.oldName}, #{entity.newName}, #{entity.managerSno})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="managerId" useGeneratedKeys="true">
+        insert into twt_party.twt_manager(manager_name, manager_academy, manager_type, manager_status, manager_columngrant, img_id, last_logintime, manager_isdeleted, old_name, new_name, manager_sno)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.managerName}, #{entity.managerAcademy}, #{entity.managerType}, #{entity.managerStatus}, #{entity.managerColumngrant}, #{entity.imgId}, #{entity.lastLogintime}, #{entity.managerIsdeleted}, #{entity.oldName}, #{entity.newName}, #{entity.managerSno})
+        </foreach>
+        on duplicate key update
+         manager_name = values(manager_name) , manager_academy = values(manager_academy) , manager_type = values(manager_type) , manager_status = values(manager_status) , manager_columngrant = values(manager_columngrant) , img_id = values(img_id) , last_logintime = values(last_logintime) , manager_isdeleted = values(manager_isdeleted) , old_name = values(old_name) , new_name = values(new_name) , manager_sno = values(manager_sno)     </insert>
+
+</mapper>
+

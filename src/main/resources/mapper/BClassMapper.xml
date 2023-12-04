@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.twt.party.dao.BClassMapper">
+
+    <resultMap type="edu.twt.party.pojo.classPojo.BClass" id="BClassMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="classname" column="classname" jdbcType="VARCHAR"/>
+        <result property="collegeid" column="collegeid" jdbcType="INTEGER"/>
+        <result property="collegecode" column="collegecode" jdbcType="INTEGER"/>
+        <result property="grade" column="grade" jdbcType="INTEGER"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="studentcount" column="studentcount" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into b_class(id, classname, collegeid, collegecode, grade, state, studentcount)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.id}, #{entity.classname}, #{entity.collegeid}, #{entity.collegecode}, #{entity.grade}, #{entity.state}, #{entity.studentcount})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into twt_party.b_class(id, classname, collegeid, collegecode, grade, state, studentcount)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.classname}, #{entity.collegeid}, #{entity.collegecode}, #{entity.grade}, #{entity.state}, #{entity.studentcount})
+        </foreach>
+        on duplicate key update
+         id = values(id) , classname = values(classname) , collegeid = values(collegeid) , collegecode = values(collegecode) , grade = values(grade) , state = values(state) , studentcount = values(studentcount)     </insert>
+
+</mapper>
+

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.twt.party.dao.TwtStudentInfoMapper">
+
+
+    <resultMap type="edu.twt.party.pojo.student.StudentVo" id="studentVoMap">
+        <result property="uid" column="uid" jdbcType="INTEGER"/>
+        <result property="stuNum" column="usernumb"/>
+        <result property="uName" column="uName" jdbcType="VARCHAR"/>
+        <result property="majorId" column="majorId"/>
+        <result property="majorName" column="majorName"/>
+        <result property="collegeName" column="collegeName"/>
+        <result property="collegeId" column="collegeId"/>
+        <result property="partyBranchId" column="partyBranch_id"/>
+        <result property="partyBranchName" column="partyBranch_name"/>
+        <association property="classVo" javaType="edu.twt.party.pojo.classPojo.ClassVo">
+            <result property="classId" column="classId" />
+            <result property="className" column="classname"/>
+        </association>
+    </resultMap>
+
+
+    <select id="selectStudentByCollegeAndGrade" resultType="edu.twt.party.pojo.student.StudentVo">
+        select info.id as uid,
+               info.username as  uName,
+               info.classid as classId,
+               c.classname,
+               info.major  as majorId,
+               info.majorname as majorName,
+               collegename
+        from b_userinfo as info
+        left join b_class as c on info.classid = c.id
+        left join b_college as collge on info.collegeid = collge.id
+        where
+              info.collegeid = IFNULL(#{collegeId},info.collegeid)
+            and
+              info.grade = IFNULL(#{grade},info.grade)
+    </select>
+    <select id="selectStudentByClassIdList" resultMap="studentVoMap">
+        select info.id as uid,
+               info.usernumb ,
+               info.username as uName,
+               info.classid,
+               info.major  as majorId,
+               info.collegeid as collegeId,
+               collegename as collegeName,
+               info.majorname,
+               c.classname from b_userinfo as info
+        left join b_class as c on info.classid = c.id
+        left join b_college as collge on info.collegeid = collge.id
+        where info.classid in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+             #{id}
+        </foreach>
+    </select>
+    <select id="selectInfoBySno" resultMap ="studentVoMap">
+        select twt_student_info.id as uid,
+               info.username as  uName,
+               info.classid as classId,
+               info.usernumb,
+               c.classname,
+               info.major  as majorId,
+               info.majorname as majorName,
+               college.id as collegeId,
+               college.collegename,
+               twt_student_info.partybranch_id,
+               twt_partybranch.partybranch_name
+        from b_userinfo as info
+        left join twt_student_info on twt_student_info.sno = info.usernumb
+        LEFT JOIN twt_partybranch on twt_student_info.partybranch_id = twt_partybranch.partybranch_id
+        left join b_class as c on info.classid = c.id
+        left join b_college as college on info.collegeid = college.id
+        where usernumb = #{sno}
+    </select>
+    <select id="selectBasicInfoBySnoList" resultType="edu.twt.party.pojo.student.UserInfoBasic">
+        select
+            t_info.id as uid,
+            t_info.sno,
+            b_info.username
+        from twt_student_info as t_info
+        left join b_userinfo as b_info on t_info.sno = b_info.usernumb
+        where t_info.sno in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>;
+    </select>
+
+</mapper>

@@ -1,0 +1,17 @@
+server:
+    port: 1234
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password: '@LGt8WQj#moi%ItF'
+        url: jdbc:mysql://101.42.97.58:3306/twt_party
+        username: twt_party
+    elasticsearch:
+        rest: es
+        uris: 114.67.247.2:9200
+        username: elastic
+        password: F=QP-bjIP+ZRHSD9ms=W
+        connection-timeout: 1000
+        read-timeout: 1000
+logging:
+  config: classpath:log/logback-spring-dev.xml

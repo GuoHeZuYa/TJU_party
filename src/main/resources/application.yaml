@@ -1,0 +1,41 @@
+spring:
+  profiles:
+#    active: prod
+#   active: dev
+     active: local
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 201MB
+
+
+mybatis-plus:
+  mapperLocation:  classpath:mapper/*.xml
+  #配置枚举 支持通配符 * 或者 ; 分割
+  type-enums-package: edu.twt.party.constant
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+
+
+
+#jolokia
+management:
+  address: 127.0.0.1
+  endpoint:
+    jolokia:
+      enabled: true
+  endpoints:
+    sensitive:
+        false
+    web:
+      exposure:
+        include: metrics,health,jolokia
+  security:
+    enabled: false
